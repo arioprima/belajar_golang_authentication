@@ -1,7 +1,15 @@
 package main
 
-import "fmt"
+import "github.com/gin-gonic/gin"
 
 func main() {
-  fmt.Println("Hello World!")
+	r := gin.Default()
+	r.GET("/", HealthCheckHandler)
+	r.Run(":8080")
+}
+
+func HealthCheckHandler(ctx *gin.Context) {
+	ctx.JSON(200, gin.H{
+		"message": "Hello World",
+	})
 }
