@@ -1,15 +1,31 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/arioprima/belajar_golang_authentication/config"
+	"github.com/arioprima/belajar_golang_authentication/controller"
+	"github.com/arioprima/belajar_golang_authentication/helper"
+	"github.com/arioprima/belajar_golang_authentication/repository"
+	"github.com/arioprima/belajar_golang_authentication/service"
+	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+	_ "github.com/lib/pq"
+)
 
 func main() {
-	r := gin.Default()
-	r.GET("/", HealthCheckHandler)
-	r.Run(":8080")
-}
+	db, err := config.ConnectDB()
+	helper.PanicIfError(err)
 
-func HealthCheckHandler(ctx *gin.Context) {
-	ctx.JSON(200, gin.H{
-		"message": "Hello World",
-	})
+	validate := validator.New()
+
+	customersRespository := repository.NewCustomersRepositoryImpl(db)
+
+	customersService := service.NewCustomersServiceImpl(customersRespository, db, validate)
+
+	customersController := controller.NewCustomersControllerImpl(customersService)
+
+	router := gin.Default()
+
+	router.POST("/api/v1/customers", customersController.Create)
+
+	router.Run(":8080")
 }
