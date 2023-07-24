@@ -7,8 +7,8 @@ import (
 )
 
 type CustomersRepository interface {
-	Create(ctx context.Context, tx *sql.Tx, customers entity.Customer) (entity.Customer, error)
-	Update(ctx context.Context, tx *sql.Tx, customers entity.Customer) (entity.Customer, error)
+	Create(ctx context.Context, tx *sql.Tx, customers entity.Customer) entity.Customer
+	Update(ctx context.Context, tx *sql.Tx, customers entity.Customer) entity.Customer
 	Delete(ctx context.Context, tx *sql.Tx, customers entity.Customer)
 	FindById(ctx context.Context, tx *sql.Tx, customersId string) (entity.Customer, error)
 	FindByUsername(ctx context.Context, tx *sql.Tx, username string) (entity.Customer, error)
