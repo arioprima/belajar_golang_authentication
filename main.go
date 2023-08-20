@@ -12,7 +12,9 @@ import (
 )
 
 func main() {
-	db, err := config.ConnectDB()
+	loadConfig, err := config.LoadConfig()
+	helper.PanicIfError(err)
+	db, err := config.ConnectionDB(&loadConfig)
 	helper.PanicIfError(err)
 
 	validate := validator.New()

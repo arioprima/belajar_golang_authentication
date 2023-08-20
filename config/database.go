@@ -5,22 +5,22 @@ import (
 	"fmt"
 )
 
-func ConnectDB() (*sql.DB, error) {
+func ConnectionDB(config *Config) (*sql.DB, error) {
 	dsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		"containers-us-west-210.railway.app",
-		"6300",
-		"postgres",
-		"L5jQK0d4GDtgUbto68yA",
-		"railway",
+		config.DBHost,
+		config.DBPort,
+		config.DBUser,
+		config.DBPassword,
+		config.DBName,
 	)
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
-	if err := db.Ping(); err != nil {
-		return nil, err
+	if err = db.Ping(); err != nil {
+		panic(err)
 	}
 
 	return db, nil
