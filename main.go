@@ -5,8 +5,8 @@ import (
 	"github.com/arioprima/belajar_golang_authentication/controller"
 	"github.com/arioprima/belajar_golang_authentication/helper"
 	"github.com/arioprima/belajar_golang_authentication/repository"
+	"github.com/arioprima/belajar_golang_authentication/route"
 	"github.com/arioprima/belajar_golang_authentication/service"
-	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	_ "github.com/lib/pq"
 )
@@ -27,9 +27,10 @@ func main() {
 	customersController := controller.NewCustomersControllerImpl(customersService)
 	customersAuthController := controller.NewCustomersAuthController(customersServiceAuth)
 
-	router := gin.Default()
+	router := route.NewRouter(customersController, customersAuthController)
 
-	router.POST("/api/v1/customers/register", customersController.Create)
-	router.POST("/api/v1/customers/login", customersAuthController.Login)
-	router.Run(":8080")
+	err = router.Run(":8080")
+	if err != nil {
+		return
+	}
 }
