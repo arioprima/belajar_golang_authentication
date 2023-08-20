@@ -22,12 +22,14 @@ func main() {
 	customersRespository := repository.NewCustomersRepositoryImpl(db)
 
 	customersService := service.NewCustomersServiceImpl(customersRespository, db, validate)
+	customersServiceAuth := service.NewCustomersServiceAuth(customersRespository, db, validate)
 
 	customersController := controller.NewCustomersControllerImpl(customersService)
+	customersAuthController := controller.NewCustomersAuthController(customersServiceAuth)
 
 	router := gin.Default()
 
-	router.POST("/api/v1/customers", customersController.Create)
-
+	router.POST("/api/v1/customers/register", customersController.Create)
+	router.POST("/api/v1/customers/login", customersAuthController.Login)
 	router.Run(":8080")
 }
